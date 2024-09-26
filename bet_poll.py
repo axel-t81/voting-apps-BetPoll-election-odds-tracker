@@ -6,7 +6,7 @@ Finally, it compares this week's probability of winning to previous periods.
 """
 # Program Details
 __author__ = "Kojrey"
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 
 # KISS Rquirements
@@ -15,8 +15,8 @@ __version__ = "0.1.1"
 # 3	Converts odds to probability of winning
 # 4	Prints odds of all parties winning this week
 # 5	Prints change in percentage vs last week, last month, last year
-# 6	Needs to somehow save this over time ...as it is watching the trend that makes this valuable (YOU COULD EXPORT THE RESULTS TO A CSV THAT COULD THEN BE MORE EASILY CONVERTED TO A CHART?)
-# 7	Generates graph (YOU COULD EXPORT THE RESULTS TO A CSV THAT COULD THEN BE MORE EASILY CONVERTED TO A CHART?)
+# 6	Needs to somehow save this over time ...as it is watching the trend that makes this valuable (YOU COULD EXPORT THE RESULTS TO A CSV THAT COULD THEN BE MORE EASILY CONVERTED TO A CHART? ...but surely Python has charting/visualisation!!!)
+# 7	Generates graph (YOU COULD EXPORT THE RESULTS TO A CSV THAT COULD THEN BE MORE EASILY CONVERTED TO A CHART? ...but surely Python has charting/visualisation!!!)
 # 8	Posts graph to social media
 # 9	Repeats every Sunday
 
@@ -37,6 +37,7 @@ oth_list = [50, 75, 75, 100] # 'Any Other Party'. This is how the bookmakers cla
 
 # Function to determine the average odds of political parties
 def list_average(party):
+    """Calculate average of bookmaker odds."""
     avg = sum(party) / len(party)
     return avg
 
@@ -53,6 +54,7 @@ print("The Any Other Party average is", oth_avg)
 # Function to determine the probability of each party winning
 # This function uses the 'Converting decimal odds to implied probability' formula 
 def prob_win(avg_odds):
+    """Determine implied probability of bookmaker odds."""
     implied_prob = (1 / avg_odds)
     return implied_prob
 
@@ -61,8 +63,14 @@ alp_prob = prob_win(alp_avg)
 lnp_prob = prob_win(lnp_avg)
 oth_prob = prob_win(oth_avg)
 
-# f strings to make %'s https://medium.com/bitgrit-data-science-publication/python-f-strings-tricks-you-should-know-7ce094a25d43
 print("The ALP's probabilty of winning is", f'{alp_prob:.2%}')
 print("The LNP's probabilty of winning is", f'{lnp_prob:.2%}')
 print("Any Other Party's probabilty of winning is", f'{oth_prob:.2%}')
 #### Incremental testing above
+
+
+
+# References:
+# 1) https://medium.com/bitgrit-data-science-publication/python-f-strings-tricks-you-should-know-7ce094a25d43
+# 2) https://help.smarkets.com/hc/en-gb/articles/214058369-How-to-calculate-implied-probability-in-betting
+# 3) https://www.geeksforgeeks.org/find-average-list-python/
