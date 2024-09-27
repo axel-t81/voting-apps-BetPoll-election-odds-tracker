@@ -10,19 +10,23 @@ __version__ = "0.1.2"
 
 
 # KISS Rquirements
-# 1	Collects Odds from 4x major bookmakers
-# 2	Averages these to create odds
-# 3	Converts odds to probability of winning
-# 4	Prints odds of all parties winning this week
-# 5	Prints change in percentage vs last week, last month, last year
-# 6	Needs to somehow save this over time ...as it is watching the trend that makes this valuable (YOU COULD EXPORT THE RESULTS TO A CSV THAT COULD THEN BE MORE EASILY CONVERTED TO A CHART? ...but surely Python has charting/visualisation!!!)
+# 1	SEE ** BELOW Collects Odds from 4x major bookmakers
+# 2	DONE Averages these to create odds
+# 3	DONE Converts odds to probability of winning
+# 4	DONE Prints odds of all parties winning this week
+# 5	SEE ** BELOW Prints change in percentage vs last week, last month, last year (THIS NEEDS SOME SORT OF LONG TERM MEMORY and May Bleed in)
+# 6	SEE ** BELOW Needs to somehow save this over time ...as it is watching the trend that makes this valuable (YOU COULD EXPORT THE RESULTS TO A CSV THAT COULD THEN BE MORE EASILY CONVERTED TO A CHART? ...but surely Python has charting/visualisation!!!)
 # 7	Generates graph (YOU COULD EXPORT THE RESULTS TO A CSV THAT COULD THEN BE MORE EASILY CONVERTED TO A CHART? ...but surely Python has charting/visualisation!!!)
 # 8	Posts graph to social media
 # 9	Repeats every Sunday
+#
+# ** You need to learn very basics of (1) web scraping and (2) a one table database? Or writing and reading from file?
+# ** For number 2, look into json https://stackoverflow.com/questions/4450144/easy-save-load-of-data-in-python or 'pickle' https://www.askpython.com/python/examples/save-data-in-python
+# ** And here's another guide, when you like GeekforGeeks https://www.geeksforgeeks.org/saving-text-json-and-csv-to-a-file-in-python/
 
 
 # IMPORT STATEMENTS
-
+import json
 
 
 # Political party Lists, where bookmaker odds will be stored
