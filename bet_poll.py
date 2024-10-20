@@ -27,6 +27,10 @@ __version__ = "0.1.2"
 
 # IMPORT STATEMENTS
 import json
+import urllib.request, urllib.parse, urllib.error
+from bs4 import BeautifulSoup
+import ssl
+import re
 
 
 # Political party Lists, where bookmaker odds will be stored
@@ -38,6 +42,30 @@ lnp_list = [4, 4, 4, 4]
 oth_list = [50, 75, 75, 100] # 'Any Other Party'. This is how the bookmakers classify this market 
 
 # FUNCTION DEFINITION
+
+# Function to get odds from SportsBet
+def sportsbet(party):
+
+    if party == 'alp' or 'ALP':
+        index = 0
+    else:
+        index = 1
+    
+    # Ignore SSL certificate errors
+    # Remove this section, and remove context=ctx if I get errors with https sites
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+
+    html = urllib.request.urlopen('https://www.sportsbet.com.au/betting/politics/australian-federal-politics/48th-parliament-of-australia-8571604')
+    a_soup_object = BeautifulSoup(html, 'html.parser')
+    # And now we can ask the soup object some questions, after it has parsed all the messy data
+
+
+    odds = a_soup_object.find_all('span', {'data-automation-id': 'price-text'})[index].string
+    odds_f = float(odds)
+    return odds_f
+
 
 # Function to determine the average odds of political parties
 def list_average(party):
