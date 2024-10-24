@@ -10,7 +10,7 @@ __version__ = "0.1.2"
 
 
 # KISS Rquirements
-# 1	SEE ** BELOW Collects Odds from 4x major bookmakers
+# 1	SEE ** BELOW Collects Odds from 4x major bookmakers (SportsBet, TAB, Ladbrokes, Bet365)
 # 2	DONE Averages these to create odds
 # 3	DONE Converts odds to probability of winning
 # 4	DONE Prints odds of all parties winning this week
