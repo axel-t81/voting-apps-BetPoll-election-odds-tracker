@@ -34,13 +34,6 @@ def inject_ga4():
 # Call it at the very start of your app
 inject_ga4()        
 
-# Debug: Check if secrets are loading
-try:
-    ga4_id = st.secrets["GA4_MEASUREMENT_ID"]
-    st.write(f"✅ Secrets working: {ga4_id[:8]}...")  # Show first 8 chars only
-except Exception as e:
-    st.write(f"❌ Secrets error: {e}")
-
 
 # Set page title
 st.set_page_config(page_title="BetPoll", page_icon="📊")
