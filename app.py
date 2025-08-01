@@ -9,8 +9,8 @@ def inject_ga4():
     """
     Inject Google Analytics 4 tracking code into Streamlit app
     """
-    # Get GA4 Measurement ID from environment variable (recommended for security)
-    GA4_MEASUREMENT_ID = os.getenv("GA4_MEASUREMENT_ID", "G-XXXXXXXXXX")
+    # This works the same whether secrets come from file or dashboard
+    GA4_MEASUREMENT_ID = st.secrets["GA4_MEASUREMENT_ID"]
     
     # Only inject GA4 in production (not during local development)
     if GA4_MEASUREMENT_ID != "G-XXXXXXXXXX":
