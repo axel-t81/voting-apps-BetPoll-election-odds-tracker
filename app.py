@@ -26,8 +26,11 @@ def create_chart(df):
 def main():
     """Main function to run the Streamlit app."""
 
-    # Set page title
-    st.set_page_config(page_title="BetPoll", page_icon="📊")
+    # Set page title with favicon.ico
+    st.set_page_config(
+        page_title="BetPoll", 
+        page_icon="favicon.ico"
+    )
     
     # Set main title
     st.markdown("<h1 style='color: #FFD700;'>Australian Federal Election Odds</h1>", unsafe_allow_html=True)
