@@ -3,11 +3,25 @@ import pandas as pd
 import altair as alt
 import streamlit.components.v1 as components
 
-# Include Google Analytics tracking code
-with open("google_analytics.html", "r") as f:
-    html_code = f.read()
-    components.html(html_code, height=0)
-
+def inject_google_analytics():
+    """
+    Injects the Google Analytics tracking script into the app.
+    It safely retrieves the measurement ID from Streamlit's secrets.
+    """
+    GA_ID = st.secrets.get("google_analytics", {}).get("measurement_id")
+    
+    if GA_ID:
+        ga_script = f"""
+            <!-- Google tag (gtag.js) -->
+            <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
+            <script>
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){{dataLayer.push(arguments);}}
+              gtag('js', new Date());
+              gtag('config', '{GA_ID}');
+            </script>
+        """
+        components.html(ga_script, height=0)
 
 def create_chart(df):
     """Create and return the Altair chart for election odds."""
@@ -25,12 +39,14 @@ def create_chart(df):
 
 def main():
     """Main function to run the Streamlit app."""
-
     # Set page title with favicon.ico
     st.set_page_config(
         page_title="BetPoll", 
         page_icon="favicon.ico"
     )
+
+    # Inject GA script
+    inject_google_analytics()
     
     # Set main title
     st.markdown("<h1 style='color: #FFD700;'>Australian Federal Election Odds</h1>", unsafe_allow_html=True)
