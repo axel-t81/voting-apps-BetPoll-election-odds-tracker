@@ -72,3 +72,6 @@ Thumbs.db
 .vscode/
 *.iml
 *.iws 
+
+# Streamlit secrets
+.streamlit/secrets.toml

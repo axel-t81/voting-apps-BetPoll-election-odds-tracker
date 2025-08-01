@@ -1,6 +1,39 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+import streamlit.components.v1 as components
+import os
+
+# Inject GA4 tracking code
+def inject_ga4():
+    """
+    Inject Google Analytics 4 tracking code into Streamlit app
+    """
+    # Get GA4 Measurement ID from environment variable (recommended for security)
+    GA4_MEASUREMENT_ID = os.getenv("GA4_MEASUREMENT_ID", "G-XXXXXXXXXX")
+    
+    # Only inject GA4 in production (not during local development)
+    if GA4_MEASUREMENT_ID != "G-XXXXXXXXXX":
+        ga4_code = f"""
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={GA4_MEASUREMENT_ID}"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){{dataLayer.push(arguments);}}
+          gtag('js', new Date());
+          
+          gtag('config', '{GA4_MEASUREMENT_ID}', {{
+            page_title: document.title,
+            page_location: window.location.href
+          }});
+        </script>
+        """
+        
+        # Inject the GA4 code (height=0 makes it invisible)
+        components.html(ga4_code, height=0)
+
+# Call it at the very start of your app
+inject_ga4()        
 
 # Set page title
 st.set_page_config(page_title="BetPoll", page_icon="📊")
