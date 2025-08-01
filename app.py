@@ -8,17 +8,14 @@ def inject_google_analytics():
     Injects the Google Analytics tracking script into the app
     with a hardcoded Measurement ID.
     """
-    # IMPORTANT: Replace this with your actual GA4 Measurement ID
-    GA_ID = "G-910Z6WVT1G"
-    
-    ga_script = f"""
+    ga_script = """
         <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-31ZQXWFHB9"></script>
         <script>
           window.dataLayer = window.dataLayer || [];
-          function gtag(){{dataLayer.push(arguments);}}
+          function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '{GA_ID}');
+          gtag('config', 'G-31ZQXWFHB9');
         </script>
     """
     components.html(ga_script, height=0)
