@@ -3,34 +3,11 @@ import pandas as pd
 import altair as alt
 import streamlit.components.v1 as components
 
-def inject_ga4_manual():
-    """
-    Direct GA4 implementation following Google's manual install guide
-    This will work alongside Streamlit's existing GTM
-    """
-    try:
-        GA4_MEASUREMENT_ID = st.secrets["GA4_MEASUREMENT_ID"]
-        
-        # Exact code from Google Analytics manual install
-        ga4_manual = f"""
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id={GA4_MEASUREMENT_ID}"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){{dataLayer.push(arguments);}}
-          gtag('js', new Date());
+# Include Google Analytics tracking code
+with open("google_analytics.html", "r") as f:
+    html_code = f.read()
+    components.html(html_code, height=0)
 
-          gtag('config', '{GA4_MEASUREMENT_ID}');
-        </script>
-        """
-        
-        # Use st.html() which is newer and more reliable
-        st.html(ga4_manual)
-        
-    except KeyError:
-        st.error("GA4_MEASUREMENT_ID not found in secrets")
-    except Exception as e:
-        st.error(f"GA4 setup error: {e}")
 
 def create_chart(df):
     """Create and return the Altair chart for election odds."""
@@ -48,8 +25,6 @@ def create_chart(df):
 
 def main():
     """Main function to run the Streamlit app."""
-    # Initialize GA4
-    inject_ga4_manual()
 
     # Set page title
     st.set_page_config(page_title="BetPoll", page_icon="📊")
