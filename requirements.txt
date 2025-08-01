@@ -3,4 +3,4 @@ altair
 streamlit
 pyarrow
 beautifulsoup4
-requests 
+requests

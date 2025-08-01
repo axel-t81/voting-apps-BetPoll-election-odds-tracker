@@ -5,23 +5,23 @@ import streamlit.components.v1 as components
 
 def inject_google_analytics():
     """
-    Injects the Google Analytics tracking script into the app.
-    It safely retrieves the measurement ID from Streamlit's secrets.
+    Injects the Google Analytics tracking script into the app
+    with a hardcoded Measurement ID.
     """
-    GA_ID = st.secrets.get("google_analytics", {}).get("measurement_id")
+    # IMPORTANT: Replace this with your actual GA4 Measurement ID
+    GA_ID = "G-910Z6WVT1G"
     
-    if GA_ID:
-        ga_script = f"""
-            <!-- Google tag (gtag.js) -->
-            <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
-            <script>
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){{dataLayer.push(arguments);}}
-              gtag('js', new Date());
-              gtag('config', '{GA_ID}');
-            </script>
-        """
-        components.html(ga_script, height=0)
+    ga_script = f"""
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){{dataLayer.push(arguments);}}
+          gtag('js', new Date());
+          gtag('config', '{GA_ID}');
+        </script>
+    """
+    components.html(ga_script, height=0)
 
 def create_chart(df):
     """Create and return the Altair chart for election odds."""
