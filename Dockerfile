@@ -46,10 +46,10 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8080/_stcore/health || exit 1
 
-# Run Streamlit
-CMD ["streamlit", "run", "app.py", \
-     "--server.port=8080", \
-     "--server.address=0.0.0.0", \
-     "--server.headless=true", \
-     "--server.fileWatcherType=none", \
-     "--browser.gatherUsageStats=false"]
+# Run analytics setup and then Streamlit
+CMD python analytics.py && streamlit run app.py \
+    --server.port=8080 \
+    --server.address=0.0.0.0 \
+    --server.headless=true \
+    --server.fileWatcherType=none \
+    --browser.gatherUsageStats=false
