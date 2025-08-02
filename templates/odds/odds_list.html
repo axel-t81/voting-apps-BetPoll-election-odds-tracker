@@ -1,0 +1,36 @@
+<!-- This template is loaded via HTMX -->
+<div class="space-y-4">
+    <h2 class="text-2xl font-bold">Latest Odds</h2>
+    
+    <div class="overflow-x-auto">
+        <table class="min-w-full table-auto">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="px-4 py-2 text-left">Date</th>
+                    <th class="px-4 py-2 text-left">Party</th>
+                    <th class="px-4 py-2 text-left">Bookmaker</th>
+                    <th class="px-4 py-2 text-right">Odds</th>
+                    <th class="px-4 py-2 text-right">Probability</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for odd in odds_list %}
+                <tr class="{% cycle 'bg-white' 'bg-gray-50' %}">
+                    <td class="px-4 py-2">{{ odd.date|date:"Y-m-d" }}</td>
+                    <td class="px-4 py-2">
+                        <span class="inline-block w-3 h-3 rounded-full mr-2" style="background-color: {{ odd.party.color }}"></span>
+                        {{ odd.party.name }}
+                    </td>
+                    <td class="px-4 py-2">{{ odd.bookmaker.name }}</td>
+                    <td class="px-4 py-2 text-right">{{ odd.odds }}</td>
+                    <td class="px-4 py-2 text-right">{{ odd.probability|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <p class="text-sm text-gray-500 mt-4">
+        Last updated: {{ last_updated|date:"Y-m-d H:i:s" }}
+    </p>
+</div>

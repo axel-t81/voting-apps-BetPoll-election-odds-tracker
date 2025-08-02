@@ -63,9 +63,15 @@ betpoll1/
 # Streamlit
 .streamlit/secrets.toml
 
+# Django
+db.sqlite3
+/staticfiles/
+/media/
+
 # System files
 .DS_Store
 Thumbs.db
+
 
 # IDE files
 .idea/

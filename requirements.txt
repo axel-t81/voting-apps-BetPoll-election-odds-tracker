@@ -1,6 +1,10 @@
+django>=5.0.0
 pandas
-altair
-streamlit
 pyarrow
-beautifulsoup4
 requests
+beautifulsoup4
+django-htmx
+python-dotenv
+gunicorn
+whitenoise
+psycopg2-binary

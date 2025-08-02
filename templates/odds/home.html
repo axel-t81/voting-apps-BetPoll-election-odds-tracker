@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Chart Section -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Election Odds Trends</h2>
+        <canvas id="oddsChart" height="400"></canvas>
+    </div>
+
+    <!-- Latest Odds Section -->
+    <div 
+        class="bg-white p-6 rounded-lg shadow-lg"
+        hx-get="{% url 'odds:odds_list' %}"
+        hx-trigger="load, every 5m"
+        hx-swap="innerHTML"
+    >
+        <div class="animate-pulse">
+            <div class="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+            <div class="space-y-3">
+                <div class="h-4 bg-gray-200 rounded"></div>
+                <div class="h-4 bg-gray-200 rounded"></div>
+                <div class="h-4 bg-gray-200 rounded"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize chart with empty data
+    const ctx = document.getElementById('oddsChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: []
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 1,
+                    ticks: {
+                        callback: function(value) {
+                            return (value * 100).toFixed(0) + '%';
+                        }
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' + 
+                                   (context.parsed.y * 100).toFixed(1) + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Fetch and update chart data
+    function updateChartData() {
+        fetch('{% url "odds:chart_data" %}')
+            .then(response => response.json())
+            .then(data => {
+                chart.data.labels = data.labels;
+                chart.data.datasets = data.datasets;
+                chart.update();
+            });
+    }
+
+    // Initial load and periodic updates
+    updateChartData();
+    setInterval(updateChartData, 300000); // Update every 5 minutes
+});
+</script>
+{% endblock %}
