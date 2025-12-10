@@ -20,21 +20,35 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load environment variables from .env file
 load_dotenv(BASE_DIR / ".env")
 
+# =============================================================================
+# SECURITY SETTINGS
+# =============================================================================
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# SECRET_KEY: Used for cryptographic signing (sessions, CSRF tokens, etc.)
+# In production, set this via environment variable - never commit real keys!
 SECRET_KEY = os.environ.get("SECRET_KEY")
 if not SECRET_KEY:
     raise ValueError("SECRET_KEY environment variable is not set")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG: Shows detailed error pages. MUST be False in production.
+DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS: Domains that can serve this app.
+# - Empty in dev (Django allows localhost when DEBUG=True)
+# - In production, add your domain and server IP
+ALLOWED_HOSTS = list(filter(None, os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")))
 
+# If no hosts specified and we're in debug mode, allow localhost
+if DEBUG and not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
-# Application definition
+# =============================================================================
+# APPLICATION DEFINITION
+# =============================================================================
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -43,6 +57,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Local apps
+    "polls.apps.PollsConfig",
 ]
 
 MIDDLEWARE = [
@@ -60,10 +76,14 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
+        # DIRS: Project-level templates (e.g., base.html shared across apps)
         "DIRS": [BASE_DIR / "templates"],
+        # APP_DIRS: Look for templates in each app's 'templates' subdir
         "APP_DIRS": True,
+        # OPTIONS: Context processors for template rendering
         "OPTIONS": {
             "context_processors": [
+                "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
@@ -75,9 +95,12 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 
-# Database
+# =============================================================================
+# DATABASE
+# =============================================================================
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# SQLite for simplicity - works great for your minimal records/day volume
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -85,8 +108,9 @@ DATABASES = {
     }
 }
 
-
-# Password validation
+# =============================================================================
+# PASSWORD VALIDATION
+# =============================================================================
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -104,25 +128,61 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
+# =============================================================================
+# INTERNATIONALIZATION
+# =============================================================================
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en-au"
 
-TIME_ZONE = "UTC"
+# TIME_ZONE: All datetimes stored/displayed in Sydney time
+# Critical for your scraping schedule and displaying odds timestamps
+TIME_ZONE = "Australia/Sydney"
 
 USE_I18N = True
 
+# USE_TZ: Store datetimes as UTC in DB, convert to TIME_ZONE for display
+# Best practice - keeps data consistent regardless of server location
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+
+
+# =============================================================================
+# STATIC FILES (CSS, JavaScript, Images)
+# =============================================================================
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+# URL prefix for static files
 STATIC_URL = "static/"
 
+# STATICFILES_DIRS: Where Django looks for static files during development
+# Put your CSS, JS, images here (e.g., HTMX, custom styles)
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+# STATIC_ROOT: Where `collectstatic` copies all static files for production
+# nginx will serve files from this directory
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+
+# =============================================================================
+# DEFAULT PRIMARY KEY
+# =============================================================================
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# =============================================================================
+# CSRF SETTINGS (Important for HTMX)
+# =============================================================================
+
+# HTMX sends AJAX requests that need CSRF tokens
+# This setting allows CSRF token to be read from a cookie by JavaScript
+CSRF_COOKIE_HTTPONLY = False  # Allow JS to read the CSRF cookie
+
+
+
