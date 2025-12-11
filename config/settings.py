@@ -46,6 +46,16 @@ ALLOWED_HOSTS = list(filter(None, os.environ.get("DJANGO_ALLOWED_HOSTS", "").spl
 if DEBUG and not ALLOWED_HOSTS:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
+# Security settings only for production:
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
 # =============================================================================
 # APPLICATION DEFINITION
 # =============================================================================
