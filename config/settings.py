@@ -46,6 +46,13 @@ ALLOWED_HOSTS = list(filter(None, os.environ.get("DJANGO_ALLOWED_HOSTS", "").spl
 if DEBUG and not ALLOWED_HOSTS:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
+# CSRF_TRUSTED_ORIGINS: Required for Django 4+ when behind a proxy
+# Must include scheme (https://) for each trusted origin
+CSRF_TRUSTED_ORIGINS = [
+    "https://betpoll.com.au",
+    "https://www.betpoll.com.au",
+]
+
 # Security settings only for production:
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
@@ -55,6 +62,8 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
+    # Trust X-Forwarded-Proto header from nginx (tells Django the original request was HTTPS)
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # =============================================================================
 # APPLICATION DEFINITION
@@ -193,6 +202,44 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # HTMX sends AJAX requests that need CSRF tokens
 # This setting allows CSRF token to be read from a cookie by JavaScript
 CSRF_COOKIE_HTTPONLY = False  # Allow JS to read the CSRF cookie
+
+
+# =============================================================================
+# LOGGING
+# =============================================================================
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "django.request": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+    },
+}
 
 
 
