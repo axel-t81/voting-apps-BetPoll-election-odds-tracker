@@ -224,6 +224,19 @@ CSRF_COOKIE_HTTPONLY = False  # Allow JS to read the CSRF cookie
 
 
 # =============================================================================
+# EMAIL SETTINGS (for scrape failure notifications)
+# =============================================================================
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+ALERT_RECIPIENT = os.environ.get("ALERT_EMAIL", "")
+
+
+# =============================================================================
 # LOGGING
 # =============================================================================
 
