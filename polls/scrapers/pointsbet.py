@@ -1,5 +1,5 @@
 """
-TAB scraper for Australian Federal Election odds.
+PointsBet scraper for Australian Federal Election odds.
 """
 
 import logging
@@ -10,26 +10,24 @@ from .base import BaseScraper, OddsResult
 logger = logging.getLogger(__name__)
 
 
-class TABScraper(BaseScraper):
+class PointsBetScraper(BaseScraper):
     """
-    Scraper for TAB Australian Federal Election betting odds.
+    Scraper for PointsBet Australian Federal Election betting odds.
     
-    URL: https://www.tab.com.au/sports/betting/Politics/competitions/Australian%20Federal%20Politics
+    URL: https://pointsbet.com.au/sports/politics/Australian-Federal-Politics/2306240
     """
     
-    name = "TAB"
-    url = "https://www.tab.com.au/sports/betting/Politics/competitions/Australian%20Federal%20Politics"
+    name = "PointsBet"
+    url = "https://pointsbet.com.au/sports/politics/Australian-Federal-Politics/2306240"
     
-    # CSS Selectors - PLACEHOLDER: Update after inspecting the live site
-    # These need to be refined during the "Test scrape locally" phase
-    CONTAINER_SELECTOR = ".market-group"  # Placeholder
-    OUTCOME_SELECTOR = ".outcome-row"  # Placeholder
-    NAME_SELECTOR = ".outcome-name"  # Placeholder
-    ODDS_SELECTOR = ".odds-button"  # Placeholder
+    # CSS Selectors for PointsBet
+    CONTAINER_SELECTOR = 'button[data-label^="oddsButton"]'  # Wait for buttons
+    OUTCOME_SELECTOR = 'button[data-label^="oddsButton"]'    # Each betting button
+    # NAME and ODDS parsed from data-value attribute
     
     async def scrape(self) -> list[OddsResult]:
         """
-        Scrape odds from TAB.
+        Scrape odds from PointsBet.
         
         Returns:
             List of OddsResult dicts with party codes and decimal odds.
@@ -43,7 +41,7 @@ class TABScraper(BaseScraper):
             # Wait for odds to load (SPA needs time to render)
             try:
                 await page.wait_for_selector(
-                    self.CONTAINER_SELECTOR,
+                    self.OUTCOME_SELECTOR,
                     timeout=self.TIMEOUT
                 )
             except Exception as e:
@@ -56,22 +54,21 @@ class TABScraper(BaseScraper):
             
             for outcome in outcomes:
                 try:
-                    # Get party name
-                    name_el = await outcome.query_selector(self.NAME_SELECTOR)
-                    if not name_el:
+                    # Parse data-value attribute: "... - Labor - 1.3"
+                    data_value = await outcome.get_attribute('data-value')
+                    if not data_value:
                         continue
-                    party_name = await name_el.inner_text()
                     
-                    # Get odds value
-                    odds_el = await outcome.query_selector(self.ODDS_SELECTOR)
-                    if not odds_el:
+                    # Split from right to get name and odds
+                    parts = data_value.rsplit(' - ', 2)
+                    if len(parts) < 3:
+                        logger.warning(f"[{self.name}] Unexpected data-value format: {data_value}")
                         continue
-                    odds_text = await odds_el.inner_text()
                     
-                    # Parse odds (e.g., "1.85" or "$1.85")
-                    odds_value = Decimal(odds_text.replace("$", "").strip())
+                    party_name = parts[-2]  # Second to last part
+                    odds_text = parts[-1]   # Last part
                     
-                    # Map to standard party code
+                    odds_value = Decimal(odds_text.strip())
                     party_code = self.map_party_name(party_name)
                     
                     results.append({
@@ -91,4 +88,3 @@ class TABScraper(BaseScraper):
         
         logger.info(f"[{self.name}] Scraped {len(results)} results")
         return results
-

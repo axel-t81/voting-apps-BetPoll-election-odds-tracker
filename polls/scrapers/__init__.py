@@ -5,23 +5,22 @@ Each scraper uses Playwright to handle JavaScript-rendered SPAs.
 """
 
 from .base import BaseScraper, OddsResult
-from .sportsbet import SportsbetScraper
-from .tab import TABScraper
+from .betr import BetrScraper
+from .pointsbet import PointsBetScraper
 from .ladbrokes import LadbrokesScraper
 
 # List of all available scrapers for the management command
 ALL_SCRAPERS = [
-    SportsbetScraper,
-    TABScraper,
+    BetrScraper,
+    PointsBetScraper,
     LadbrokesScraper,
 ]
 
 __all__ = [
     "BaseScraper",
     "OddsResult",
-    "SportsbetScraper",
-    "TABScraper",
+    "BetrScraper",
+    "PointsBetScraper",
     "LadbrokesScraper",
     "ALL_SCRAPERS",
 ]
-

@@ -1,5 +1,5 @@
 """
-Sportsbet scraper for Australian Federal Election odds.
+Betr scraper for Australian Federal Election odds.
 """
 
 import logging
@@ -10,26 +10,25 @@ from .base import BaseScraper, OddsResult
 logger = logging.getLogger(__name__)
 
 
-class SportsbetScraper(BaseScraper):
+class BetrScraper(BaseScraper):
     """
-    Scraper for Sportsbet Australian Federal Election betting odds.
+    Scraper for Betr Australian Federal Election betting odds.
     
-    URL: https://www.sportsbet.com.au/events/federal-election
+    URL: https://www.betr.com.au/sports/Politics/142/Australian-Elections/Next-Federal-Election-49th-Parliament/Next-Sworn-In-Federal-Government/1713975/All-Markets
     """
     
-    name = "Sportsbet"
-    url = "https://www.sportsbet.com.au/events/federal-election"
+    name = "Betr"
+    url = "https://www.betr.com.au/sports/Politics/142/Australian-Elections/Next-Federal-Election-49th-Parliament/Next-Sworn-In-Federal-Government/1713975/All-Markets"
     
-    # CSS Selectors - PLACEHOLDER: Update after inspecting the live site
-    # These need to be refined during the "Test scrape locally" phase
-    CONTAINER_SELECTOR = "[data-automation-id='market-coupon']"  # Placeholder
-    OUTCOME_SELECTOR = "[data-automation-id='outcome']"  # Placeholder
-    NAME_SELECTOR = "[data-automation-id='outcome-name']"  # Placeholder
-    ODDS_SELECTOR = "[data-automation-id='outcome-price']"  # Placeholder
+    # CSS Selectors for Betr (Material-UI based)
+    CONTAINER_SELECTOR = 'ul.MuiList-root.MuiList-dense'
+    OUTCOME_SELECTOR = 'li.MuiListItem-root.MuiListItem-dense'
+    NAME_SELECTOR = '.MuiListItemText-primary p'
+    ODDS_SELECTOR = 'button.MuiButton-root .MuiButton-label > div > div'
     
     async def scrape(self) -> list[OddsResult]:
         """
-        Scrape odds from Sportsbet.
+        Scrape odds from Betr.
         
         Returns:
             List of OddsResult dicts with party codes and decimal odds.

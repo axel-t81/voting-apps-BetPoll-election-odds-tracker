@@ -22,10 +22,10 @@ class LadbrokesScraper(BaseScraper):
     
     # CSS Selectors - PLACEHOLDER: Update after inspecting the live site
     # These need to be refined during the "Test scrape locally" phase
-    CONTAINER_SELECTOR = ".event-card"  # Placeholder
-    OUTCOME_SELECTOR = ".selection-button"  # Placeholder
-    NAME_SELECTOR = ".selection-name"  # Placeholder
-    ODDS_SELECTOR = ".odds-value"  # Placeholder
+    CONTAINER_SELECTOR = '[data-testid="upcoming-sports"]'
+    OUTCOME_SELECTOR = 'button.price-button'
+    NAME_SELECTOR = '[data-testid="price-button-name"] .displayTitle'
+    ODDS_SELECTOR = '[data-testid="price-button-odds"]'
     
     async def scrape(self) -> list[OddsResult]:
         """
