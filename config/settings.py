@@ -52,7 +52,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://betpoll.com.au",
     "https://www.betpoll.com.au",
 ]
-
+#testing
 # Security settings only for production:
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
